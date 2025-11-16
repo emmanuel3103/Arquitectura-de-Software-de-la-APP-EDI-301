@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Diseño de Arquitectura de Software — Sistema EDI 301</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0 1.5rem 2rem;
+      max-width: 900px;
+      margin-inline: auto;
+      background-color: #f7f7f7;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 0 1rem;
+    }
+    h1 {
+      margin-bottom: 0.3rem;
+    }
+    .meta {
+      color: #555;
+      font-size: 0.95rem;
+    }
+    nav.toc {
+      background: #fff;
+      border-radius: 0.5rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      border: 1px solid #ddd;
+    }
+    nav.toc h2 {
+      margin-top: 0;
+      font-size: 1.05rem;
+    }
+    nav.toc ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.2rem 0 0;
+    }
+    nav.toc li {
+      margin: 0.25rem 0;
+    }
+    nav.toc a {
+      text-decoration: none;
+      color: #0056b3;
+    }
+    section {
+      background: #fff;
+      border-radius: 0.5rem;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #ddd;
+    }
+    section h2 {
+      margin-top: 0;
+    }
+    h3 {
+      margin-top: 1rem;
+    }
+    code, pre {
+      font-family: "Fira Code", "Courier New", monospace;
+      font-size: 0.9rem;
+    }
+    pre {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 0.8rem 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.4rem 0.6rem;
+      text-align: left;
+    }
+    th {
+      background: #f0f0f0;
+    }
+    figure {
+      margin: 1rem 0;
+      text-align: center;
+    }
+    figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+    }
+    figure figcaption {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.4rem;
+    }
+    ul, ol {
+      padding-left: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Diseño de Arquitectura de Software — Sistema EDI 301</h1>
+    <p class="meta">
+      Equipo de desarrollo EDI 301<br />
+      Universidad Linda Vista
+    </p>
+  </header>
+
+  <nav class="toc">
+    <h2>Índice general</h2>
+    <ul>
+      <li><a href="#resumen">Resumen</a></li>
+      <li><a href="#proposito">1. Propósito</a></li>
+      <li><a href="#diagrama-arquitectura">2. Diagrama de arquitectura</a></li>
+      <li><a href="#componentes-interfaces">3. Descripción de componentes e interfaces</a></li>
+      <li><a href="#patrones-diseno">4. Patrones de diseño</a></li>
+      <li><a href="#diagrama-secuencia">5. Diagrama de secuencia</a></li>
+      <li><a href="#conclusion">6. Conclusión</a></li>
+    </ul>
+  </nav>
+
+  <section id="resumen">
+    <h2>Resumen</h2>
+    <p>
+      Este documento cubre la primera entrega del Diseño de Arquitectura de Software
+      del sistema EDI-301, incluyendo:
+      (i) diagrama de arquitectura (referenciado como imagen),
+      (ii) descripción de componentes y sus interfaces,
+      (iii) patrones de diseño aplicados y
+      (iv) un diagrama de secuencia clave.
+    </p>
+  </section>
+
+  <section id="proposito">
+    <h2>1. Propósito</h2>
+    <p>
+      Este documento define cómo está estructurado el sistema internamente,
+      qué componentes lo conforman y cómo se comunican entre sí.
+    </p>
+  </section>
+
+  <section id="diagrama-arquitectura">
+    <h2>2. Diagrama de arquitectura</h2>
+    <p>
+      La arquitectura general de EDI-301 sigue un estilo cliente–servidor con API REST,
+      desacoplando presentación (Flutter), lógica de negocio (Node.js/Express)
+      y datos (SQL Server).
+    </p>
+
+    <figure>
+      <!-- Reemplaza 'arquitectura-edi301.png' con la ruta real de tu imagen -->
+      <img src="arquitectura-edi301.png" alt="Arquitectura general del sistema EDI-301" />
+      <figcaption>Figura 1: Arquitectura general del sistema (insertar imagen).</figcaption>
+    </figure>
+
+    <p>
+      La App consume servicios vía HTTPS/JSON con autenticación JWT.
+      El API Gateway termina TLS, enruta y aplica límites.
+      La API REST (Express) valida datos y roles, delega reglas de negocio
+      a servicios y accede a la base de datos mediante repositorios con consultas
+      parametrizadas en SQL Server.
+    </p>
+  </section>
+
+  <section id="componentes-interfaces">
+    <h2>3. Descripción de componentes e interfaces</h2>
+
+    <h3>Presentación (Flutter)</h3>
+    <p>
+      <strong>Responsabilidad:</strong> UI/UX, navegación, manejo de estado y consumo de API.
+    </p>
+    <p>
+      <strong>Interfaz:</strong> Cliente HTTP con cabecera
+      <code>Authorization: Bearer &lt;JWT&gt;</code>; intercambio JSON.
+    </p>
+    <p>
+      <strong>Errores esperados:</strong> manejo de códigos
+      <code>400</code>/<code>401</code>/<code>403</code>/<code>500</code> con mensajes correspondientes.
+    </p>
+
+    <h3>API REST (Node.js/Express)</h3>
+    <p>
+      <strong>Responsabilidad:</strong> Exponer endpoints REST; aplicar middleware
+      de autenticación (JWT), control de roles y validación de esquema
+      (p. ej., Joi).
+    </p>
+    <p>Convención de respuesta:</p>
+
+    <p><em>Listing 1.1: Estructura de respuesta sugerida</em></p>
+    <pre><code>{
+  "ok": true,
+  "data": { ... },
+  "error": null
+}
+
+// En caso de error:
+{
+  "ok": false,
+  "data": null,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "...",
+    "details": [...]
+  }
+}
+</code></pre>
+
+    <h3>Servicios de dominio</h3>
+    <p>
+      <strong>Responsabilidad:</strong> Reglas de negocio por subdominio
+      (Auth, Usuarios, Familias, Eventos, Publicaciones).
+    </p>
+    <p>Interfaces internas (firmas típicas):</p>
+
+    <p><em>Listing 1.2: Firmas típicas de servicios</em></p>
+    <pre><code>AuthService.login(credentials) -&gt; { user, roles, token, expiresIn }
+UsersService.getMe(userId) -&gt; UserDTO
+PublicationsService.create(dto, actor) -&gt; PublicationDTO
+EventsService.create(dto, actor) -&gt; EventDTO
+FamiliesService.addMember(familyId, userId, role) -&gt; FamilyMemberDTO
+</code></pre>
+
+    <h3>Repositorios / Acceso a datos</h3>
+    <p>
+      <strong>Responsabilidad:</strong> Encapsular SQL parametrizado,
+      mapear a DTOs y gestionar transacciones.
+    </p>
+    <p>
+      <strong>Reglas:</strong> No concatenar strings en consultas;
+      utilizar <em>pooling</em> de conexiones.
+    </p>
+
+    <h3>Base de datos (SQL Server)</h3>
+    <p>
+      <strong>Entidades base:</strong>
+      <code>USUARIOS</code>, <code>PERFIL</code>, <code>FAMILIA</code>,
+      <code>USUARIO_FAMILIA</code>, <code>EVENTOS</code>,
+      <code>PUBLICACIONES</code>, <code>COMENTARIOS</code>, <code>CHATS</code>.
+    </p>
+    <p>
+      <strong>Relaciones clave:</strong><br />
+      Usuario–Publicación (1–N),<br />
+      Familia–Usuario (N–N vía <code>USUARIO_FAMILIA</code>),<br />
+      Usuario–Evento (1–N creado por).
+    </p>
+    <p>
+      <strong>Índices sugeridos:</strong> <code>E_mail</code>, <code>Created_at</code>,
+      llaves foráneas y columnas de filtrado frecuentes.
+    </p>
+
+    <h3>Interfaces externas (endpoints representativos)</h3>
+    <p><em>Cuadro 1: Endpoints representativos de la API REST</em></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Método / Path</th>
+          <th>Descripción</th>
+          <th>Autorización</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>POST /api/auth/login</td>
+          <td>Iniciar sesión (JWT)</td>
+          <td>Público</td>
+        </tr>
+        <tr>
+          <td>GET /api/users/me</td>
+          <td>Datos del usuario actual</td>
+          <td>JWT</td>
+        </tr>
+        <tr>
+          <td>GET /api/publications</td>
+          <td>Listado paginado de publicaciones</td>
+          <td>JWT</td>
+        </tr>
+        <tr>
+          <td>POST /api/publications</td>
+          <td>Crear publicación</td>
+          <td>JWT (Admin/Staff)</td>
+        </tr>
+        <tr>
+          <td>GET /api/events</td>
+          <td>Consultar eventos</td>
+          <td>JWT</td>
+        </tr>
+        <tr>
+          <td>POST /api/events</td>
+          <td>Crear evento</td>
+          <td>JWT (Admin/Staff)</td>
+        </tr>
+        <tr>
+          <td>POST /api/families</td>
+          <td>Crear familia</td>
+          <td>JWT (Admin)</td>
+        </tr>
+        <tr>
+          <td>POST /api/families/{id}/members</td>
+          <td>Agregar integrante</td>
+          <td>JWT (Admin)</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="patrones-diseno">
+    <h2>4. Patrones de diseño</h2>
+    <ol>
+      <li>
+        <strong>Arquitectura por capas:</strong>
+        Presentación → API → Servicios → Repositorios → BD.
+      </li>
+      <li>
+        <strong>Controller (estilo MVC):</strong>
+        Controladores Express reciben HTTP, validan y delegan a servicios.
+      </li>
+      <li>
+        <strong>Repository:</strong>
+        Encapsula acceso a datos (<code>UserRepository</code>, <code>PublicationRepository</code>, etc.).
+      </li>
+      <li>
+        <strong>Dependency Injection (ligera):</strong>
+        Servicios reciben pool de BD y repositorios para facilitar pruebas.
+      </li>
+      <li>
+        <strong>Strategy:</strong>
+        Políticas de validación/paginación/ordenamiento intercambiables.
+      </li>
+      <li>
+        <strong>Adapter:</strong>
+        Integraciones externas (almacenamiento de archivos, pagos futuros) desacopladas.
+      </li>
+      <li>
+        <strong>Singleton:</strong>
+        Pool de conexión a SQL Server compartido.
+      </li>
+      <li>
+        <strong>Observer / Pub-Sub:</strong>
+        Estado reactivo en Flutter y potencial notificación <em>push</em>.
+      </li>
+      <li>
+        <strong>Circuit Breaker + Retry:</strong>
+        Resiliencia ante fallos transitorios de red/BD.
+      </li>
+      <li>
+        <strong>Facade:</strong>
+        Servicios exponen operaciones de alto nivel a controladores.
+      </li>
+    </ol>
+  </section>
+
+  <section id="diagrama-secuencia">
+    <h2>5. Diagrama de secuencia</h2>
+
+    <p><strong>Figura 2: Diagrama de secuencia de Publicar Evento.</strong></p>
+    <ol>
+      <li>
+        La App Flutter envía <code>POST /api/publications</code> con
+        <code>Authorization: Bearer &lt;JWT&gt;</code> y cuerpo
+        <code>{title, body, attachments?}</code>.
+      </li>
+      <li>
+        La API valida esquema y rol (Admin).
+      </li>
+      <li>
+        El servicio de Publicaciones aplica reglas de negocio.
+      </li>
+      <li>
+        El repositorio ejecuta <code>INSERT</code> parametrizado en SQL Server.
+      </li>
+      <li>
+        Se responde <code>201 Created</code> con el DTO de la publicación.
+      </li>
+    </ol>
+
+    <h3>Errores comunes</h3>
+    <ul>
+      <li><strong>400 Bad Request:</strong> Validación de datos.</li>
+      <li><strong>401 Unauthorized:</strong> JWT inválido o vencido.</li>
+      <li><strong>403 Forbidden:</strong> Rol insuficiente.</li>
+      <li><strong>409 Conflict:</strong> Regla de negocio (duplicados, etc.).</li>
+      <li>
+        <strong>500 / 503:</strong> Error del servidor/BD
+        (con <em>retry</em> y <em>backoff</em>).
+      </li>
+    </ul>
+  </section>
+
+  <section id="conclusion">
+    <h2>6. Conclusión</h2>
+    <p>
+      Esta arquitectura respalda los objetivos funcionales y no funcionales del proyecto,
+      ofreciendo una base tecnológica preparada para futuras ampliaciones
+      (notificaciones push, colas de eventos, microservicios o nuevas interfaces).
+    </p>
+    <p>
+      El diseño presentado constituye, por tanto, una guía fundamental para
+      la implementación y el mantenimiento evolutivo del sistema EDI 301.
+    </p>
+  </section>
+
+</body>
+</html>
