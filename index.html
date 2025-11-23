@@ -2,423 +2,384 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Diseño de Arquitectura de Software — Sistema EDI 301</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diseño de Arquitectura de Software — Sistema EDI-301</title>
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Arial, sans-serif;
       line-height: 1.6;
-      margin: 0;
-      padding: 0 1.5rem 2rem;
+      margin: 2rem;
       max-width: 900px;
-      margin-inline: auto;
-      background-color: #f7f7f7;
     }
-    header {
-      text-align: center;
-      padding: 2rem 0 1rem;
-    }
-    h1 {
-      margin-bottom: 0.3rem;
-    }
-    .meta {
-      color: #555;
-      font-size: 0.95rem;
+    h1, h2, h3, h4 {
+      font-family: "Segoe UI", Arial, sans-serif;
     }
     nav.toc {
-      background: #fff;
-      border-radius: 0.5rem;
-      padding: 1rem 1.25rem;
+      border: 1px solid #ccc;
+      padding: 1rem 1.5rem;
       margin-bottom: 2rem;
-      border: 1px solid #ddd;
-    }
-    nav.toc h2 {
-      margin-top: 0;
-      font-size: 1.05rem;
+      background-color: #f8f8f8;
     }
     nav.toc ul {
       list-style: none;
       padding-left: 0;
-      margin: 0.2rem 0 0;
     }
-    nav.toc li {
-      margin: 0.25rem 0;
+    nav.toc ul li {
+      margin: 0.2rem 0;
     }
-    nav.toc a {
-      text-decoration: none;
-      color: #0056b3;
-    }
-    section {
-      background: #fff;
-      border-radius: 0.5rem;
-      padding: 1.5rem 1.75rem;
-      margin-bottom: 1.5rem;
-      border: 1px solid #ddd;
-    }
-    section h2 {
-      margin-top: 0;
-    }
-    h3 {
-      margin-top: 1rem;
-    }
-    code, pre {
-      font-family: "Fira Code", "Courier New", monospace;
-      font-size: 0.9rem;
-    }
-    pre {
-      background: #272822;
-      color: #f8f8f2;
-      padding: 0.8rem 1rem;
-      border-radius: 0.5rem;
-      overflow-x: auto;
+    nav.toc ul ul {
+      padding-left: 1.5rem;
     }
     table {
-      width: 100%;
       border-collapse: collapse;
-      margin: 0.75rem 0;
-      font-size: 0.95rem;
+      width: 100%;
+      margin: 1rem 0;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
     }
     th, td {
-      border: 1px solid #ccc;
       padding: 0.4rem 0.6rem;
       text-align: left;
     }
-    th {
-      background: #f0f0f0;
+    code, pre {
+      font-family: "Courier New", monospace;
+      background-color: #f5f5f5;
     }
-    figure {
-      margin: 1rem 0;
-      text-align: center;
-    }
-    figure img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 0.5rem;
-      border: 1px solid #ccc;
-    }
-    figure figcaption {
-      font-size: 0.9rem;
-      color: #555;
-      margin-top: 0.4rem;
-    }
-    ul, ol {
-      padding-left: 1.2rem;
+    pre {
+      padding: 0.75rem;
+      overflow-x: auto;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Diseño de Arquitectura de Software — Sistema EDI 301</h1>
-    <p class="meta">
-      Equipo de desarrollo EDI 301<br />
-      Universidad Linda Vista
-    </p>
-  </header>
+  <h1>Diseño de Arquitectura de Software — Sistema EDI-301</h1>
+  <p><strong>Equipo EDI-301</strong><br>
+     <em>Universidad Linda Vista</em>
+  </p>
 
+  <h2>Resumen</h2>
+  <p>
+    Este documento presenta la arquitectura de software del sistema EDI-301,
+    detallando su estructura, componentes principales, vistas arquitectónicas
+    y atributos de calidad. El objetivo es servir como base técnica para el
+    desarrollo, mantenimiento y evolución del sistema, asegurando consistencia
+    con los lineamientos institucionales y las mejores prácticas de ingeniería
+    de software.
+  </p>
+
+  <!-- Índice -->
   <nav class="toc">
-    <h2>Índice general</h2>
+    <h2>Índice</h2>
     <ul>
-      <li><a href="#resumen">Resumen</a></li>
-      <li><a href="#proposito">1. Propósito</a></li>
-      <li><a href="#diagrama-arquitectura">2. Diagrama de arquitectura</a></li>
-      <li><a href="#componentes-interfaces">3. Descripción de componentes e interfaces</a></li>
-      <li><a href="#patrones-diseno">4. Patrones de diseño</a></li>
-      <li><a href="#diagrama-secuencia">5. Diagrama de secuencia</a></li>
-      <li><a href="#conclusion">6. Conclusión</a></li>
+      <li><a href="#sec1">1. Introducción</a>
+        <ul>
+          <li><a href="#sec1-1">1.1 Propósito</a></li>
+          <li><a href="#sec1-2">1.2 Alcance</a></li>
+          <li><a href="#sec1-3">1.3 Definiciones, acrónimos y abreviaturas</a></li>
+          <li><a href="#sec1-4">1.4 Referencias</a></li>
+        </ul>
+      </li>
+      <li><a href="#sec2">2. Representación arquitectónica</a></li>
+      <li><a href="#sec3">3. Objetivos y restricciones arquitectónicas</a>
+        <ul>
+          <li><a href="#sec3-1">3.1 Objetivos</a></li>
+          <li><a href="#sec3-2">3.2 Restricciones</a></li>
+        </ul>
+      </li>
+      <li><a href="#sec4">4. Vista de casos de uso</a>
+        <ul>
+          <li><a href="#sec4-1">4.1 Casos de uso significativos</a></li>
+        </ul>
+      </li>
+      <li><a href="#sec5">5. Vista lógica</a>
+        <ul>
+          <li><a href="#sec5-1">5.1 Estructura y capas</a></li>
+        </ul>
+      </li>
+      <li><a href="#sec6">6. Vista de procesos</a>
+        <ul>
+          <li><a href="#sec6-1">6.1 Procesos principales</a></li>
+          <li><a href="#sec6-2">6.2 Relación con elementos de diseño</a></li>
+          <li><a href="#sec6-3">6.3 Dependencias</a></li>
+          <li><a href="#sec6-4">6.4 Implementación</a></li>
+        </ul>
+      </li>
+      <li><a href="#sec7">7. Vista de despliegue</a>
+        <ul>
+          <li><a href="#sec7-1">7.1 Dispositivos móviles Android</a></li>
+          <li><a href="#sec7-2">7.2 Dispositivos móviles iOS</a></li>
+          <li><a href="#sec7-3">7.3 Servidor de API (Backend)</a></li>
+          <li><a href="#sec7-4">7.4 Servidor de base de datos</a></li>
+          <li><a href="#sec7-5">7.5 Servicio de notificaciones push</a></li>
+        </ul>
+      </li>
+      <li><a href="#sec8">8. Tamaño y rendimiento</a></li>
+      <li><a href="#sec9">9. Calidad</a></li>
+      <li><a href="#conclusion">Conclusión</a></li>
     </ul>
   </nav>
 
-  <section id="resumen">
-    <h2>Resumen</h2>
-    <p>
-      Este documento cubre la primera entrega del Diseño de Arquitectura de Software
-      del sistema EDI-301, incluyendo:
-      (i) diagrama de arquitectura (referenciado como imagen),
-      (ii) descripción de componentes y sus interfaces,
-      (iii) patrones de diseño aplicados y
-      (iv) un diagrama de secuencia clave.
-    </p>
-  </section>
+  <!-- Contenido -->
 
-  <section id="proposito">
-    <h2>1. Propósito</h2>
-    <p>
-      Este documento define cómo está estructurado el sistema internamente,
-      qué componentes lo conforman y cómo se comunican entre sí.
-    </p>
-  </section>
+  <h2 id="sec1">1. Introducción</h2>
 
-  <section id="diagrama-arquitectura">
-    <h2>2. Diagrama de arquitectura</h2>
-    <p>
-      La arquitectura general de EDI-301 sigue un estilo cliente–servidor con API REST,
-      desacoplando presentación (Flutter), lógica de negocio (Node.js/Express)
-      y datos (SQL Server).
-    </p>
+  <h3 id="sec1-1">1.1 Propósito</h3>
+  <p>
+    El presente documento describe la arquitectura del sistema EDI-301,
+    diseñado para optimizar la gestión del programa de familias EDI de la
+    Universidad Linda Vista. Su propósito es proporcionar una visión
+    estructurada de los componentes, la interacción entre ellos y las
+    decisiones técnicas adoptadas.
+  </p>
 
-    <figure>
-      <img src="imgs_arq/diag2.png" alt="Arquitectura general del sistema EDI-301" />
-      <figcaption>Figura 1: Arquitectura general del sistema.</figcaption>
-    </figure>
+  <h3 id="sec1-2">1.2 Alcance</h3>
+  <p>
+    La arquitectura abarca la aplicación móvil desarrollada en Flutter, la API
+    REST construida en Node.js/Express y la base de datos SQL Server. Incluye
+    aspectos de seguridad, despliegue y comunicación entre capas. Quedan fuera
+    los procesos administrativos internos no informatizados del programa.
+  </p>
 
-    <p>
-      La App consume servicios vía HTTPS/JSON con autenticación JWT.
-      El API Gateway termina TLS, enruta y aplica límites.
-      La API REST (Express) valida datos y roles, delega reglas de negocio
-      a servicios y accede a la base de datos mediante repositorios con consultas
-      parametrizadas en SQL Server.
-    </p>
-  </section>
+  <h3 id="sec1-3">1.3 Definiciones, acrónimos y abreviaturas</h3>
+  <table>
+    <caption>Cuadro 1: Acrónimos y definiciones relevantes</caption>
+    <thead>
+      <tr>
+        <th>Término</th>
+        <th>Definición</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>API</td><td>Interfaz de Programación de Aplicaciones</td></tr>
+      <tr><td>REST</td><td>Arquitectura basada en transferencia de estado (HTTP)</td></tr>
+      <tr><td>DTO</td><td>Objeto de Transferencia de Datos</td></tr>
+      <tr><td>JWT</td><td>Token de Autenticación JSON Web Token</td></tr>
+      <tr><td>CRUD</td><td>Crear, Leer, Actualizar, Eliminar</td></tr>
+      <tr><td>ORM</td><td>Mapeo Objeto-Relacional</td></tr>
+      <tr><td>Pool</td><td>Grupo de conexiones reutilizables a la base de datos</td></tr>
+      <tr><td>Nginx</td><td>Servidor web y proxy inverso</td></tr>
+    </tbody>
+  </table>
 
-  <section id="componentes-interfaces">
-    <h2>3. Descripción de componentes e interfaces</h2>
+  <h3 id="sec1-4">1.4 Referencias</h3>
+  <ul>
+    <li>Pressman, R. S. (2019). <em>Ingeniería del Software: Un enfoque práctico</em> (9ª ed.). McGraw-Hill.</li>
+    <li>Sommerville, I. (2020). <em>Software Engineering</em> (10th ed.). Pearson.</li>
+    <li>Documentación oficial de Node.js y Express.js.</li>
+    <li>Guía de desarrollo Flutter (Google, 2024).</li>
+    <li>Microsoft Docs: <em>SQL Server Developer Documentation</em> (2024).</li>
+  </ul>
 
-    <h3>Presentación (Flutter)</h3>
-    <p>
-      <strong>Responsabilidad:</strong> UI/UX, navegación, manejo de estado y consumo de API.
-    </p>
-    <p>
-      <strong>Interfaz:</strong> Cliente HTTP con cabecera
-      <code>Authorization: Bearer &lt;JWT&gt;</code>; intercambio JSON.
-    </p>
-    <p>
-      <strong>Errores esperados:</strong> manejo de códigos
-      <code>400</code>/<code>401</code>/<code>403</code>/<code>500</code> con mensajes correspondientes.
-    </p>
+  <h2 id="sec2">2. Representación arquitectónica</h2>
+  <p>
+    El sistema adopta un modelo cliente-servidor de tres capas, estructurado
+    de la siguiente forma:
+  </p>
+  <ol>
+    <li><strong>Presentación:</strong> interfaz móvil en Flutter, con comunicación HTTPS.</li>
+    <li><strong>Lógica de negocio:</strong> API REST Node.js/Express, controladores y servicios.</li>
+    <li><strong>Datos:</strong> base de datos SQL Server con acceso mediante consultas parametrizadas.</li>
+  </ol>
+  <p>
+    La arquitectura sigue el modelo 4+1 de Kruchten, considerando vistas
+    lógica, de proceso, de despliegue, de desarrollo y de casos de uso.
+  </p>
 
-    <h3>API REST (Node.js/Express)</h3>
-    <p>
-      <strong>Responsabilidad:</strong> Exponer endpoints REST; aplicar middleware
-      de autenticación (JWT), control de roles y validación de esquema
-      (p. ej., Joi).
-    </p>
-    <p>Convención de respuesta:</p>
+  <h2 id="sec3">3. Objetivos y restricciones arquitectónicas</h2>
 
-    <p><em>Listing 1.1: Estructura de respuesta sugerida</em></p>
-    <pre><code>{
-  "ok": true,
-  "data": { ... },
-  "error": null
-}
+  <h3 id="sec3-1">3.1 Objetivos</h3>
+  <ul>
+    <li>Garantizar modularidad y mantenibilidad.</li>
+    <li>Facilitar escalabilidad y rendimiento.</li>
+    <li>Aplicar autenticación y seguridad mediante JWT y TLS.</li>
+    <li>Asegurar compatibilidad multiplataforma (Android, iOS).</li>
+  </ul>
 
-// En caso de error:
-{
-  "ok": false,
-  "data": null,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "...",
-    "details": [...]
-  }
-}
-</code></pre>
+  <h3 id="sec3-2">3.2 Restricciones</h3>
+  <ul>
+    <li>Uso obligatorio de Node.js, Flutter y SQL Server.</li>
+    <li>Cumplimiento de estándares institucionales de documentación.</li>
+    <li>Tiempo máximo de respuesta: 2 segundos por solicitud REST.</li>
+  </ul>
 
-    <h3>Servicios de dominio</h3>
-    <p>
-      <strong>Responsabilidad:</strong> Reglas de negocio por subdominio
-      (Auth, Usuarios, Familias, Eventos, Publicaciones).
-    </p>
-    <p>Interfaces internas (firmas típicas):</p>
+  <h2 id="sec4">4. Vista de casos de uso</h2>
 
-    <p><em>Listing 1.2: Firmas típicas de servicios</em></p>
-    <pre><code>AuthService.login(credentials) -&gt; { user, roles, token, expiresIn }
-UsersService.getMe(userId) -&gt; UserDTO
-PublicationsService.create(dto, actor) -&gt; PublicationDTO
-EventsService.create(dto, actor) -&gt; EventDTO
-FamiliesService.addMember(familyId, userId, role) -&gt; FamilyMemberDTO
-</code></pre>
+  <h3 id="sec4-1">4.1 Casos de uso significativos</h3>
+  <table>
+    <caption>Cuadro 2: Casos de uso arquitectónicamente relevantes</caption>
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Caso de uso</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>CU-01</td><td>Iniciar sesión</td><td>Autenticación con JWT.</td></tr>
+      <tr><td>CU-02</td><td>Gestionar familias</td><td>Creación y asignación de núcleos familiares.</td></tr>
+      <tr><td>CU-03</td><td>Registrar eventos</td><td>Alta y consulta de actividades.</td></tr>
+      <tr><td>CU-04</td><td>Publicar avisos</td><td>Comunicación entre usuarios.</td></tr>
+      <tr><td>CU-05</td><td>Editar perfil</td><td>Actualización de datos personales.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    Estos casos definen las interacciones base entre la aplicación móvil, la
+    API y la base de datos.
+  </p>
 
-    <h3>Repositorios / Acceso a datos</h3>
-    <p>
-      <strong>Responsabilidad:</strong> Encapsular SQL parametrizado,
-      mapear a DTOs y gestionar transacciones.
-    </p>
-    <p>
-      <strong>Reglas:</strong> No concatenar strings en consultas;
-      utilizar <em>pooling</em> de conexiones.
-    </p>
+  <h2 id="sec5">5. Vista lógica</h2>
 
-    <h3>Base de datos (SQL Server)</h3>
-    <p>
-      <strong>Entidades base:</strong>
-      <code>USUARIOS</code>, <code>PERFIL</code>, <code>FAMILIA</code>,
-      <code>USUARIO_FAMILIA</code>, <code>EVENTOS</code>,
-      <code>PUBLICACIONES</code>, <code>COMENTARIOS</code>, <code>CHATS</code>.
-    </p>
-    <p>
-      <strong>Relaciones clave:</strong><br />
-      Usuario–Publicación (1–N),<br />
-      Familia–Usuario (N–N vía <code>USUARIO_FAMILIA</code>),<br />
-      Usuario–Evento (1–N creado por).
-    </p>
-    <p>
-      <strong>Índices sugeridos:</strong> <code>E_mail</code>, <code>Created_at</code>,
-      llaves foráneas y columnas de filtrado frecuentes.
-    </p>
+  <h3 id="sec5-1">5.1 Estructura y capas</h3>
+  <ul>
+    <li><strong>Presentación (Flutter):</strong> pantallas, controladores y formularios conectados por HTTPS.</li>
+    <li><strong>Negocio (Node.js/Express):</strong> controladores, servicios, repositorios y middleware.</li>
+    <li><strong>Datos (SQL Server):</strong> tablas relacionales normalizadas, vistas y procedimientos almacenados.</li>
+  </ul>
+  <p>
+    Cada capa se comunica mediante objetos DTO y peticiones REST
+    estandarizadas.
+  </p>
 
-    <h3>Interfaces externas (endpoints representativos)</h3>
-    <p><em>Cuadro 1: Endpoints representativos de la API REST</em></p>
+  <h2 id="sec6">6. Vista de procesos</h2>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Método / Path</th>
-          <th>Descripción</th>
-          <th>Autorización</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>POST /api/auth/login</td>
-          <td>Iniciar sesión (JWT)</td>
-          <td>Público</td>
-        </tr>
-        <tr>
-          <td>GET /api/users/me</td>
-          <td>Datos del usuario actual</td>
-          <td>JWT</td>
-        </tr>
-        <tr>
-          <td>GET /api/publications</td>
-          <td>Listado paginado de publicaciones</td>
-          <td>JWT</td>
-        </tr>
-        <tr>
-          <td>POST /api/publications</td>
-          <td>Crear publicación</td>
-          <td>JWT (Admin/Staff)</td>
-        </tr>
-        <tr>
-          <td>GET /api/events</td>
-          <td>Consultar eventos</td>
-          <td>JWT</td>
-        </tr>
-        <tr>
-          <td>POST /api/events</td>
-          <td>Crear evento</td>
-          <td>JWT (Admin/Staff)</td>
-        </tr>
-        <tr>
-          <td>POST /api/families</td>
-          <td>Crear familia</td>
-          <td>JWT (Admin)</td>
-        </tr>
-        <tr>
-          <td>POST /api/families/{id}/members</td>
-          <td>Agregar integrante</td>
-          <td>JWT (Admin)</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+  <h3 id="sec6-1">6.1 Procesos principales</h3>
+  <ul>
+    <li>Autenticación de usuarios (<code>AuthService</code>).</li>
+    <li>Gestión de familias y miembros.</li>
+    <li>Registro y consulta de eventos.</li>
+    <li>Publicaciones y comentarios.</li>
+    <li>Notificaciones automáticas.</li>
+  </ul>
 
-  <section id="patrones-diseno">
-    <h2>4. Patrones de diseño</h2>
-    <ol>
-      <li>
-        <strong>Arquitectura por capas:</strong>
-        Presentación → API → Servicios → Repositorios → BD.
-      </li>
-      <li>
-        <strong>Controller (estilo MVC):</strong>
-        Controladores Express reciben HTTP, validan y delegan a servicios.
-      </li>
-      <li>
-        <strong>Repository:</strong>
-        Encapsula acceso a datos (<code>UserRepository</code>, <code>PublicationRepository</code>, etc.).
-      </li>
-      <li>
-        <strong>Dependency Injection (ligera):</strong>
-        Servicios reciben pool de BD y repositorios para facilitar pruebas.
-      </li>
-      <li>
-        <strong>Strategy:</strong>
-        Políticas de validación/paginación/ordenamiento intercambiables.
-      </li>
-      <li>
-        <strong>Adapter:</strong>
-        Integraciones externas (almacenamiento de archivos, pagos futuros) desacopladas.
-      </li>
-      <li>
-        <strong>Singleton:</strong>
-        Pool de conexión a SQL Server compartido.
-      </li>
-      <li>
-        <strong>Observer / Pub-Sub:</strong>
-        Estado reactivo en Flutter y potencial notificación <em>push</em>.
-      </li>
-      <li>
-        <strong>Circuit Breaker + Retry:</strong>
-        Resiliencia ante fallos transitorios de red/BD.
-      </li>
-      <li>
-        <strong>Facade:</strong>
-        Servicios exponen operaciones de alto nivel a controladores.
-      </li>
-    </ol>
-  </section>
+  <h3 id="sec6-2">6.2 Relación con elementos de diseño</h3>
+  <table>
+    <caption>Cuadro 3: Procesos y componentes</caption>
+    <thead>
+      <tr>
+        <th>Proceso</th>
+        <th>Elemento de diseño</th>
+        <th>Comunicación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Autenticación</td><td>AuthController / AuthService</td><td>JWT</td></tr>
+      <tr><td>Familias</td><td>FamiliesController / FamiliesService</td><td>JSON / HTTP</td></tr>
+      <tr><td>Eventos</td><td>EventsController / EventsService</td><td>JSON / HTTP</td></tr>
+      <tr><td>Publicaciones</td><td>PublicationsController / PublicationsService</td><td>JSON / HTTP</td></tr>
+    </tbody>
+  </table>
 
-  <section id="diagrama-secuencia">
-    <figure>
-      
-      <img src="imgs_arq/image.png" alt="Diagrama de Secuencia de Publicar Evento" />
-      <figcaption>Figura 2: Diagrama de Secuencia de Publicar Evento.</figcaption>
-    </figure>
+  <h3 id="sec6-3">6.3 Dependencias</h3>
+  <p>
+    Cada proceso depende de su respectivo repositorio de datos y librerías
+    auxiliares (bcrypt, JWT, etc.).
+  </p>
 
-    <h2>5. Diagrama de secuencia</h2>
+  <h3 id="sec6-4">6.4 Implementación</h3>
+  <pre>
+/controllers
+  - auth.controller.js
+  - events.controller.js
+/services
+  - auth.service.js
+  - events.service.js
+/repositories
+  - user.repository.js
+  - event.repository.js
+  </pre>
 
-    <p><strong>Figura 2: Diagrama de secuencia de Publicar Evento.</strong></p>
-    <ol>
-      <li>
-        La App Flutter envía <code>POST /api/publications</code> con
-        <code>Authorization: Bearer &lt;JWT&gt;</code> y cuerpo
-        <code>{title, body, attachments?}</code>.
-      </li>
-      <li>
-        La API valida esquema y rol (Admin).
-      </li>
-      <li>
-        El servicio de Publicaciones aplica reglas de negocio.
-      </li>
-      <li>
-        El repositorio ejecuta <code>INSERT</code> parametrizado en SQL Server.
-      </li>
-      <li>
-        Se responde <code>201 Created</code> con el DTO de la publicación.
-      </li>
-    </ol>
+  <h2 id="sec7">7. Vista de despliegue</h2>
 
-    <h3>Errores comunes</h3>
-    <ul>
-      <li><strong>400 Bad Request:</strong> Validación de datos.</li>
-      <li><strong>401 Unauthorized:</strong> JWT inválido o vencido.</li>
-      <li><strong>403 Forbidden:</strong> Rol insuficiente.</li>
-      <li><strong>409 Conflict:</strong> Regla de negocio (duplicados, etc.).</li>
-      <li>
-        <strong>500 / 503:</strong> Error del servidor/BD
-        (con <em>retry</em> y <em>backoff</em>).
-      </li>
-    </ul>
-  </section>
+  <h3 id="sec7-1">7.1 Dispositivos móviles Android</h3>
+  <p>
+    Los usuarios acceden al sistema EDI-301 desde teléfonos o tabletas con
+    sistema operativo Android. La aplicación se instala desde la tienda
+    oficial o mediante distribución interna y se comunica con la API REST a
+    través de HTTPS. El procesamiento pesado se realiza en el servidor, por lo
+    que el dispositivo actúa principalmente como cliente de presentación.
+  </p>
 
-  <section id="conclusion">
-    <h2>6. Conclusión</h2>
-    <p>
-      Esta arquitectura respalda los objetivos funcionales y no funcionales del proyecto,
-      ofreciendo una base tecnológica preparada para futuras ampliaciones
-      (notificaciones push, colas de eventos, microservicios o nuevas interfaces).
-    </p>
-    <p>
-      El diseño presentado constituye, por tanto, una guía fundamental para
-      la implementación y el mantenimiento evolutivo del sistema EDI 301.
-    </p>
-  </section>
+  <h3 id="sec7-2">7.2 Dispositivos móviles iOS</h3>
+  <p>
+    De forma equivalente, la aplicación puede ejecutarse en dispositivos iOS
+    (iPhone/iPad). La comunicación con el backend se realiza también vía
+    HTTPS, utilizando los mismos endpoints y formato de intercambio de datos
+    (JSON), garantizando así la compatibilidad y coherencia funcional entre
+    plataformas.
+  </p>
+
+  <h3 id="sec7-3">7.3 Servidor de API (Backend)</h3>
+  <p>
+    El servidor de API ejecuta la aplicación Node.js/Express, expone los
+    servicios REST consumidos por los clientes móviles y aplica las reglas de
+    negocio, autenticación (JWT) y validación de datos. Este servidor se
+    encuentra detrás de un proxy inverso (por ejemplo, Nginx) que gestiona
+    TLS, el enrutamiento y el registro de accesos.
+  </p>
+
+  <h3 id="sec7-4">7.4 Servidor de base de datos</h3>
+  <p>
+    La base de datos SQL Server se despliega en un servidor dedicado o
+    instancia gestionada dentro de la infraestructura institucional. El
+    backend accede a la base de datos mediante un pool de conexiones y
+    consultas parametrizadas, manteniendo la integridad de la información de
+    usuarios, familias, eventos y publicaciones.
+  </p>
+
+  <h3 id="sec7-5">7.5 Servicio de notificaciones push</h3>
+  <p>
+    Para el envío de notificaciones (por ejemplo, recordatorios de eventos o
+    nuevas publicaciones), el sistema se integra con un servicio de
+    notificaciones push (como Firebase Cloud Messaging). El backend registra
+    los tokens de los dispositivos y envía mensajes cuando ocurren eventos
+    relevantes, permitiendo mantener informados a los usuarios incluso cuando
+    la aplicación no está en primer plano.
+  </p>
+
+  <p><strong>Figura 1:</strong> Arquitectura general del sistema.</p>
+
+  <h2 id="sec8">8. Tamaño y rendimiento</h2>
+  <ul>
+    <li>Usuarios concurrentes: hasta 1000.</li>
+    <li>Tiempo promedio de respuesta: 1.5 segundos.</li>
+    <li>Pooling SQL activo con 10 conexiones simultáneas.</li>
+    <li>Compresión HTTP y caché configurado en Nginx.</li>
+    <li>Base de datos estimada: 1 GB anual.</li>
+  </ul>
+
+  <h2 id="sec9">9. Calidad</h2>
+  <p>
+    El diseño arquitectónico cumple con los atributos de calidad definidos en
+    la norma ISO/IEC 25010:
+  </p>
+  <table>
+    <caption>Cuadro 4: Atributos de calidad del sistema EDI-301</caption>
+    <thead>
+      <tr>
+        <th>Atributo</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Mantenibilidad</td><td>Código modular y documentado por capas.</td></tr>
+      <tr><td>Confiabilidad</td><td>Manejo centralizado de errores y logs.</td></tr>
+      <tr><td>Seguridad</td><td>Autenticación JWT, TLS y control de roles.</td></tr>
+      <tr><td>Rendimiento</td><td>Conexiones en pool y compresión HTTP.</td></tr>
+      <tr><td>Escalabilidad</td><td>Arquitectura desacoplada, API independiente.</td></tr>
+      <tr><td>Usabilidad</td><td>Interfaz intuitiva en Flutter.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="conclusion">Conclusión</h2>
+  <p>
+    El diseño de arquitectura del sistema EDI-301 establece la base técnica y
+    estructural para su desarrollo, garantizando un equilibrio entre
+    rendimiento, seguridad y mantenibilidad. Su estructura en capas, uso de
+    servicios REST y separación lógica por responsabilidades aseguran un
+    crecimiento sostenible y una integración futura con nuevos módulos o
+    servicios institucionales.
+  </p>
 
 </body>
 </html>
-
-
-
-
-
